@@ -12,6 +12,7 @@ uecode_qpush:
             key: 234
             secret: 432
             region: eu-west-1
+            endpoint: http://localhost:1234
         ironmq:
             driver: ironmq
             token: 123

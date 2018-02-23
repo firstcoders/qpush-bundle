@@ -176,6 +176,10 @@ class UecodeQPushExtension extends Extension
                 'region' => $config['region']
             ];
 
+            if (isset($config['endpoint'])) {
+                $awsConfig['endpoint'] = $config['endpoint'];
+            }
+
             $aws = new Definition('Aws\Common\Aws');
             $aws->setFactory(['Aws\Common\Aws', 'factory']);
             $aws->setArguments([$awsConfig]);

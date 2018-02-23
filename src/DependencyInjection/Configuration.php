@@ -96,6 +96,7 @@ class Configuration implements ConfigurationInterface
                     ->scalarNode('region')
                         ->defaultValue('us-east-1')
                     ->end()
+                    ->scalarNode('endpoint')->end()
                     // File
                     ->scalarNode('path')->end()
                 ->end()
