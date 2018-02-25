@@ -508,7 +508,12 @@ class AwsProvider extends AbstractProvider
             return false;
         }
 
-        $name = str_replace('.', '-', $this->getNameWithPrefix());
+        if ($this->options['topic_name']) {
+            $name = str_replace('.', '-', $this->options['topic_name']);
+        } else {
+            $name = str_replace('.', '-', $this->getNameWithPrefix());
+        }
+
         $result = $this->sns->createTopic([
             'Name' => $name
         ]);
