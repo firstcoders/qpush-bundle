@@ -116,11 +116,13 @@ class AwsProvider extends AbstractProvider
             $this->createTopic();
 
             // Add the SQS Queue as a Subscriber to the SNS Topic
-            $this->subscribeToTopic(
-                $this->topicArn,
-                'sqs',
-                $this->sqs->getQueueArn($this->queueUrl)
-            );
+            if (null !== $this->queueUrl) {
+                $this->subscribeToTopic(
+                    $this->topicArn,
+                    'sqs',
+                    $this->sqs->getQueueArn($this->queueUrl)
+                );
+            }
 
             // Add configured Subscribers to the SNS Topic
             foreach ($this->options['subscribers'] as $subscriber) {
@@ -389,6 +391,10 @@ class AwsProvider extends AbstractProvider
      */
     public function createQueue()
     {
+        if (array_key_exists('queue_name', $this->options) && false === $this->options['queue_name']) {
+            return false;
+        }
+
         $attributes = [
             'VisibilityTimeout'             => $this->options['message_timeout'],
             'MessageRetentionPeriod'        => $this->options['message_expiration'],
@@ -508,7 +514,7 @@ class AwsProvider extends AbstractProvider
             return false;
         }
 
-        if ($this->options['topic_name']) {
+        if (isset($this->options['topic_name'])) {
             $name = str_replace('.', '-', $this->options['topic_name']);
         } else {
             $name = str_replace('.', '-', $this->getNameWithPrefix());

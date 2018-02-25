@@ -30,6 +30,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Uecode\Bundle\QPushBundle\Event\Events;
 use Uecode\Bundle\QPushBundle\Event\MessageEvent;
+use Symfony\Component\Console\Input\InputOption;
 
 /**
  * @author Keith Kirk <kkirk@undergroundelephant.com>
@@ -55,6 +56,7 @@ class QueueReceiveCommand extends Command implements ContainerAwareInterface
         $this->container = $container;
     }
 
+    protected $input;
     protected $output;
 
     protected function configure()
@@ -68,11 +70,26 @@ class QueueReceiveCommand extends Command implements ContainerAwareInterface
                 'Name of a specific queue to poll',
                 null
             )
+            ->addOption(
+                'n-messages',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Maximum amount of messages that can be received when polling the queue',
+                null
+            )
+            ->addOption(
+                'receive-wait-time',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'If supported, time in seconds to leave the polling request open - for long polling',
+                null
+            )
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->input = $intput;
         $this->output = $output;
         $registry = $this->container->get('uecode_qpush');
 
@@ -97,8 +114,15 @@ class QueueReceiveCommand extends Command implements ContainerAwareInterface
             );
         }
 
+        $options = [
+            'messages_to_receive' => $this->input->getOption('n-messages'),
+            'receive_wait_time' => $this->input->getOption('receive-wait-time'),
+        ];
+
+        print_r($options);die;
+
         $dispatcher = $this->container->get('event_dispatcher');
-        $messages   = $registry->get($name)->receive();
+        $messages   = $registry->get($name)->receive($options);
 
         foreach ($messages as $message) {
             $messageEvent = new MessageEvent($name, $message);
