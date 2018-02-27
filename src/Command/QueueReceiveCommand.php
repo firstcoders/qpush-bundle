@@ -89,7 +89,7 @@ class QueueReceiveCommand extends Command implements ContainerAwareInterface
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->input = $intput;
+        $this->input = $input;
         $this->output = $output;
         $registry = $this->container->get('uecode_qpush');
 
@@ -114,12 +114,15 @@ class QueueReceiveCommand extends Command implements ContainerAwareInterface
             );
         }
 
-        $options = [
-            'messages_to_receive' => $this->input->getOption('n-messages'),
-            'receive_wait_time' => $this->input->getOption('receive-wait-time'),
-        ];
+        $options = [];
 
-        print_r($options);die;
+        if ($this->input->getOption('n-messages')) {
+            $options['messages_to_receive'] = $this->input->getOption('n-messages');
+        }
+
+        if ($this->input->getOption('receive-wait-time')) {
+            $options['receive_wait_time'] = $this->input->getOption('receive-wait-time');
+        }
 
         $dispatcher = $this->container->get('event_dispatcher');
         $messages   = $registry->get($name)->receive($options);
