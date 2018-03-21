@@ -514,11 +514,7 @@ class AwsProvider extends AbstractProvider
             return false;
         }
 
-        if (isset($this->options['topic_name'])) {
-            $name = str_replace('.', '-', $this->options['topic_name']);
-        } else {
-            $name = str_replace('.', '-', $this->getNameWithPrefix());
-        }
+        $name = str_replace('.', '-', $this->getTopicNameWithPrefix());
 
         $result = $this->sns->createTopic([
             'Name' => $name
@@ -532,6 +528,18 @@ class AwsProvider extends AbstractProvider
         $this->log(200, "Created SNS Topic", ['TopicARN' => $this->topicArn]);
 
         return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getTopicNameWithPrefix()
+    {
+        if (!empty($this->options['topic_name'])) {
+            return $this->options['topic_name'];
+        }
+
+        return $this->getNameWithPrefix();
     }
 
     /**
