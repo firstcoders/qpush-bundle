@@ -78,6 +78,14 @@ class UecodeQPushExtension extends Extension
                         $provider
                     );
                     break;
+                case 'awsp':
+                    $class  = $container->getParameter('uecode_qpush.provider.awsp');
+                    $client = $this->createAwsClient(
+                        $config['providers'][$provider],
+                        $container,
+                        $provider
+                    );
+                    break;
                 case 'ironmq':
                     $class  = $container->getParameter('uecode_qpush.provider.ironmq');
                     $client = $this->createIronMQClient(

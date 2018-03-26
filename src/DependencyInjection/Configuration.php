@@ -61,7 +61,8 @@ class Configuration implements ConfigurationInterface
             'ironmq' => ['token', 'project_id'],
             'sync' => [],
             'custom' => ['service'],
-            'file' => ['path']
+            'file' => ['path'],
+            'awsp' => []
         ];
 
         $node
@@ -140,9 +141,17 @@ class Configuration implements ConfigurationInterface
                                 ->defaultNull()
                                 ->info('The actual name of the queue')
                             ->end()
+                            ->scalarNode('queue_url')
+                                ->defaultNull()
+                                ->info('The url of the queue')
+                            ->end()
                             ->scalarNode('topic_name')
                                 ->defaultNull()
                                 ->info('The name of the topic')
+                            ->end()
+                            ->scalarNode('topic_arn')
+                                ->defaultNull()
+                                ->info('The arn of the topic')
                             ->end()
                             ->booleanNode('push_notifications')
                                 ->defaultFalse()

@@ -7,6 +7,11 @@ uecode_qpush:
             key: 123
             secret: 123
             region: us-east-1
+        awsp:
+            driver: awsp
+            key: 123
+            secret: 123
+            region: us-east-1
         secondary_aws:
             driver: aws
             key: 234
@@ -23,7 +28,7 @@ uecode_qpush:
             project_id: 234
         file:
             driver: file
-            path: /tmp/my_queue
+            path: /tmp/my_queue        
     queues:
         test_file:
             provider: file
@@ -45,6 +50,11 @@ uecode_qpush:
                 receive_wait_time:      3
                 subscribers:
                     - { endpoint: http://example.com/qpush, protocol: http }
+        test_awsp:
+            provider: aws
+            options:
+                topic_arn: arn:my_topic
+                queue_url: http://myhost/myqueue
         test_secondary_aws:
             provider: secondary_aws
             options:
