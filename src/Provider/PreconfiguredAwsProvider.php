@@ -86,9 +86,9 @@ class PreconfiguredAwsProvider extends AbstractProvider
      */
     public function publish(array $message, array $options = [])
     {
-        if (array_key_exists('topic_arn', $this->options)) {
+        if (null !== $this->options['topic_arn']) {
             return $this->publishToTopic($message);
-        } elseif (array_key_exists('queue_url', $this->options)) {
+        } elseif (null !== $this->options['queue_url']) {
             return $this->publishToQueue($message, $options);
         }
 
